@@ -1,6 +1,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import type { AxigenConfig, FunctionNameConfig } from "../types.js";
+import { pathToFileURL } from "node:url";
 
 const CONFIG_FILES = ["axigen.config.js", "axigen.config.cjs", "axigen.config.mjs", "axigen.config.ts"];
 
@@ -30,7 +31,7 @@ async function importConfig(filePath: string): Promise<AxigenConfig> {
 
   try {
     // Dynamic import works for both ESM and CJS
-    const mod = await import(filePath);
+    const mod = await import(pathToFileURL(filePath).href);
     raw = mod.default ?? mod;
   } catch {
     throw new Error(`Failed to load config: ${filePath}`);
